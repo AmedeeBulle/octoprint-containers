@@ -76,7 +76,7 @@ Push the code to [resin.io](https://resin.io/):
 ```
 $ git push resin master
 ```
-This will trigger a build on the [resin.io](https://resin.io/) servers. If all goes well it will finish with a nice unicorn &#x1f984 ASCII art.  
+This will trigger a build on the [resin.io](https://resin.io/) servers. If all goes well it will finish with a nice unicorn &#x1f984; ASCII art.  
 Your Raspberry Pi will download and run the containers automatically; after that your [OctoPrint](https://octoprint.org/) server will be ready to go!
 
 For future updates, you simply need to pull the new code and push it back to [resin.io](https://resin.io/) and your device will be updated!
