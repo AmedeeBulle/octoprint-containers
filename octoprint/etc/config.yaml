@@ -1,0 +1,20 @@
+plugins:
+  _disabled:
+  - cura
+server:
+  commands:
+    serverRestartCommand: /opt/octoprint/bin/restart.sh
+    systemRestartCommand: /opt/octoprint/bin/reboot.sh
+    systemShutdownCommand: /opt/octoprint/bin/poweroff.sh
+system:
+  actions:
+  - action: start-stream
+    command: /opt/octoprint/bin/streaming.sh start
+    name: Start video stream
+  - action: stop-stream
+    command: /opt/octoprint/bin/streaming.sh stop
+    name: Stop video stream
+webcam:
+  ffmpeg: /usr/bin/ffmpeg
+  snapshot: http://webcam:8080/?action=snapshot
+  stream: /webcam/?action=stream

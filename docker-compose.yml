@@ -1,0 +1,52 @@
+# Docker-compose file for Octoprint Containers
+
+# Version 2.1 for resin compatibility
+version: '2.1'
+
+volumes:
+  octoprint_vol: {}
+
+networks:
+  octoprint_net: {}
+
+services:
+  # Octoprint itself
+  octoprint:
+    build: octoprint
+    image: amedee/octoprint-octoprint
+    restart: always
+    privileged: true
+    volumes:
+      - octoprint_vol:/opt/octoprint/data
+      # Uncomment next line for "Plain Docker" setup
+      - /run/dbus:/host/run/dbus
+    networks:
+      - octoprint_net
+    labels:
+      io.resin.features.dbus: '1'
+  # Webcam stream
+  webcam:
+    build: webcam
+    image: amedee/octoprint-webcam
+    restart: always
+    privileged: true
+    environment:
+      WEBCAM_INPUT: "${WEBCAM_INPUT:-input_raspicam.so -fps 5}"
+      WEBCAM_START: "${WEBCAM_START:-true}"
+    networks:
+      - octoprint_net
+  # http/https proxy
+  haproxy:
+    build: haproxy
+    image: amedee/octoprint-haproxy
+    restart: always
+    depends_on:
+      - octoprint
+      - webcam
+    volumes:
+      - octoprint_vol:/opt/haproxy/data
+    networks:
+      - octoprint_net
+    ports:
+      - "80:80"
+      - "443:443"
