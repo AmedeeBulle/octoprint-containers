@@ -19,7 +19,7 @@ services:
     volumes:
       - octoprint_vol:/opt/octoprint/data
       # Uncomment next line for "Plain Docker" setup
-      - /run/dbus:/host/run/dbus
+      # - /run/dbus:/host/run/dbus
     networks:
       - octoprint_net
     labels:
