@@ -1,0 +1,36 @@
+sudo: required
+
+services:
+  - docker
+
+language: python
+
+install:
+  - pip install yq
+
+script:
+  # Ensure we can build ARM images
+  - docker run --rm --privileged multiarch/qemu-user-static:register --reset
+  # Build images
+  - docker-compose build
+  # Does it run?
+  - |
+    IMAGE=$(docker-compose config | yq -r .services.octoprint.image)
+    echo "OctoPrint image is: ${IMAGE}"
+    docker run --rm "${IMAGE}" /opt/octoprint/OctoPrint/venv/bin/octoprint --version
+  # Push images to the docker hub for the master branch
+  - |
+    if [ "${TRAVIS_BRANCH}" == "master" ] && [ "${TRAVIS_PULL_REQUEST}" == "false" ]
+    then
+      docker login -u="${DOCKER_USERNAME}" -p="${DOCKER_PASSWORD}"
+      IMAGE=$(docker-compose config | yq -r .services.octoprint.image)
+      TAG=$(docker run --rm "${IMAGE}" /opt/octoprint/OctoPrint/venv/bin/octoprint --version | awk 'NF>1{print $NF}')
+      IMAGES=$(docker-compose config | yq -r '.services | .[].image')
+      for IMAGE in ${IMAGES}
+      do
+      echo "Pushing ${IMAGE} to the docker hub; Tag: ${TAG}"
+        docker tag "${IMAGE}" "${IMAGE}:${TAG}"
+        docker push "${IMAGE}:${TAG}"
+        docker push "${IMAGE}"
+      done
+    fi
