@@ -16,6 +16,7 @@ OctoPrint containers  [![Build Status](https://travis-ci.org/AmedeeBulle/octopri
   - [Configure and run the OctoPrint server](#configure-and-run-the-octoprint-server)
   - [Updates](#updates)
 - [First run](#first-run)
+- [Note about persistence](#note-about-persistence)
 
 <!-- TOC END -->
 # Introduction
@@ -164,3 +165,22 @@ Point your browser to the IP address of your Raspberry Pi and enjoy [OctoPrint](
 At first run, the `haproxy` container will generate a self-signed SSL certificate, so the service will be available on both http and https ports. If you want to share your printer with the world, only expose the https port...
 
 Enjoy!
+
+# Note about persistence
+All working files (configuration, G-Code, time-lapses, ...) are stored in the `octoprint_vol` Docker volume, so they won't disappear unless you explicitly destroy the volume.  
+If you really need/want to destroy the volume and re-start from scratch:
+- [resin.io](https://resin.io/): select 'Purge Data' in the Device Menu
+-  _Plain Docker_: run
+```
+docker-compose down -v
+```
+
+The same applies to the containers themselves: they won't be destroyed by default even if you reboot the Pi. To remove existing container and re-create them:
+- [resin.io](https://resin.io/): click on the 'Restart' icon in the Device Dashboard
+-  _Plain Docker_: run
+```
+docker-compose down
+docker-compose up -d
+```
+
+By doing this, you will loose any change made to the code, in particular if you installed plugins you will have to re-install them (but their configuration will be preserved).
