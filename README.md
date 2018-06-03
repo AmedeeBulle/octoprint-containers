@@ -28,6 +28,8 @@ The setup is made of 3 containers:
 - `webcam`: runs the webcam streaming service (`mjpg-streamer`)
 - `haproxy`: exposes the above containers on http and https ports
 
+The build will use by default the latest [OctoPrint](https://octoprint.org/) release, this can be overridden by changing the `release` argument in the `docker-compose.yml` file.
+
 Note that this setup only runs on Raspberry Pi 3B(+), as [resin.io](https://resin.io/) only supports multi-containers on these platforms.  
 The _Plain Docker_ setup on Raspbian might work on older models, but it has not been tested.
 
