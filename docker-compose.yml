@@ -11,6 +11,8 @@ services:
   octoprint:
     build:
       context: octoprint
+      args:
+        release: latest
     image: amedee/octoprint-octoprint
     restart: always
     privileged: true
