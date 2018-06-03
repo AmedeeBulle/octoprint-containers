@@ -9,7 +9,8 @@ volumes:
 services:
   # Octoprint itself
   octoprint:
-    build: octoprint
+    build:
+      context: octoprint
     image: amedee/octoprint-octoprint
     restart: always
     privileged: true
@@ -21,7 +22,8 @@ services:
       io.resin.features.dbus: '1'
   # Webcam stream
   webcam:
-    build: webcam
+    build:
+      context: webcam
     image: amedee/octoprint-webcam
     restart: always
     privileged: true
@@ -30,7 +32,8 @@ services:
       WEBCAM_START: "${WEBCAM_START:-true}"
   # http/https proxy
   haproxy:
-    build: haproxy
+    build:
+      context: haproxy
     image: amedee/octoprint-haproxy
     restart: always
     depends_on:
