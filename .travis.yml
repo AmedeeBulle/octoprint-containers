@@ -3,6 +3,10 @@ sudo: required
 services:
   - docker
 
+env:
+  global:
+    - DOCKER_COMPOSE_VERSION=1.21.2
+
 language: python
 
 install:
