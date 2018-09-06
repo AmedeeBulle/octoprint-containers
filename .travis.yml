@@ -6,15 +6,23 @@ services:
 env:
   global:
     - DOCKER_COMPOSE_VERSION=1.21.2
+  matrix:
+    - GW_MACHINE_NAME=raspberry-pi
+    - GW_MACHINE_NAME=raspberrypi3
 
 language: python
 
+before_install:
+  - sudo rm /usr/local/bin/docker-compose
+  - sudo curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+  - sudo chmod +x /usr/local/bin/docker-compose
+
 install:
   - pip install yq
-
-script:
   # Ensure we can build ARM images
   - docker run --rm --privileged multiarch/qemu-user-static:register --reset
+
+script:
   # Build images
   - docker-compose build
   # Does it run?
@@ -22,19 +30,10 @@ script:
     IMAGE=$(docker-compose config | yq -r .services.octoprint.image)
     echo "OctoPrint image is: ${IMAGE}"
     docker run --rm "${IMAGE}" /opt/octoprint/OctoPrint/venv/bin/octoprint --version
-  # Push images to the docker hub for the master branch
-  - |
-    if [ "${TRAVIS_BRANCH}" == "master" ] && [ "${TRAVIS_PULL_REQUEST}" == "false" ]
-    then
-      docker login -u="${DOCKER_USERNAME}" -p="${DOCKER_PASSWORD}"
-      IMAGE=$(docker-compose config | yq -r .services.octoprint.image)
-      TAG=$(docker run --rm "${IMAGE}" /opt/octoprint/OctoPrint/venv/bin/octoprint --version | awk 'NF>1{print $NF}')
-      IMAGES=$(docker-compose config | yq -r '.services | .[].image')
-      for IMAGE in ${IMAGES}
-      do
-      echo "Pushing ${IMAGE} to the docker hub; Tag: ${TAG}"
-        docker tag "${IMAGE}" "${IMAGE}:${TAG}"
-        docker push "${IMAGE}:${TAG}"
-        docker push "${IMAGE}"
-      done
-    fi
+
+deploy:
+  skip_cleanup: true
+  provider: script
+  script: ./scripts/deploy.sh
+  on:
+    all_branches: true

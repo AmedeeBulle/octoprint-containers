@@ -12,6 +12,7 @@ services:
     build:
       context: octoprint
       args:
+        OP_MACHINE_NAME:
         release: latest
     image: amedee/octoprint-octoprint
     restart: always
@@ -26,6 +27,8 @@ services:
   webcam:
     build:
       context: webcam
+      args:
+        OP_MACHINE_NAME:
     image: amedee/octoprint-webcam
     restart: always
     privileged: true
@@ -36,6 +39,8 @@ services:
   haproxy:
     build:
       context: haproxy
+      args:
+        OP_MACHINE_NAME:
     image: amedee/octoprint-haproxy
     restart: always
     depends_on:

@@ -1,5 +1,7 @@
 # haproxy http/https proxy
-FROM resin/raspberrypi3-debian:stretch
+ARG OP_MACHINE_NAME
+
+FROM resin/${OP_MACHINE_NAME:-%%RESIN_MACHINE_NAME%%}-debian:stretch
 
 RUN apt-get update && \
     apt-get install haproxy ssl-cert && \
