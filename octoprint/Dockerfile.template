@@ -7,7 +7,7 @@ SHELL ["/bin/bash", "-c"]
 
 RUN apt-get update && \
     apt-get install python-pip python-dev python-setuptools virtualenv \
-	    python-virtualenv git libyaml-dev build-essential ffmpeg dbus \
+            python-virtualenv git libyaml-dev build-essential ffmpeg dbus \
             jq && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
@@ -18,10 +18,17 @@ ARG release
 
 RUN if [ "${release}" = "latest" ]; then \
       release=$(curl --silent https://api.github.com/repos/foosel/OctoPrint/releases/latest | jq -r .tag_name); \
-	fi; \
+      i=0; \
+      while [ "${release}" = "null" -a $i -lt 10 ]; do \
+        echo "Cannot get release info -- retrying"; \
+        sleep 10; \
+        release=$(curl --silent https://api.github.com/repos/foosel/OctoPrint/releases/latest | jq -r .tag_name); \
+        i=$(expr $i + 1); \
+      done; \
+    fi; \
     git clone --branch "${release}" https://github.com/foosel/OctoPrint.git /opt/octoprint/OctoPrint && \
     virtualenv venv && \
-	./venv/bin/python setup.py install 
+      ./venv/bin/python setup.py install 
 
 WORKDIR /opt/octoprint
 
