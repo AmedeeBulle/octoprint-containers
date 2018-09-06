@@ -7,8 +7,8 @@ env:
   global:
     - DOCKER_COMPOSE_VERSION=1.21.2
   matrix:
-    - GW_MACHINE_NAME=raspberry-pi
-    - GW_MACHINE_NAME=raspberrypi3
+    - OP_MACHINE_NAME=raspberry-pi
+    - OP_MACHINE_NAME=raspberrypi3
 
 language: python
 
