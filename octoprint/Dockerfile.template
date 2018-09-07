@@ -16,14 +16,16 @@ WORKDIR /opt/octoprint/OctoPrint
 
 ARG release
 
+# Travis often fails in getting latest octoprint release, this is why we 
+# have this while/re-try loop...
 RUN if [ "${release}" = "latest" ]; then \
-      release=$(curl --silent https://api.github.com/repos/foosel/OctoPrint/releases/latest | jq -r .tag_name); \
       i=0; \
-      while [ "${release}" = "null" -a $i -lt 10 ]; do \
+      while true; do \
+        i=$(expr $i + 1); \
+        release=$(curl --silent https://api.github.com/repos/foosel/OctoPrint/releases/latest | jq -r .tag_name); \
+        [ "${release}" = "null" -a $i -lt 10 ] || break;\
         echo "Cannot get release info -- retrying"; \
         sleep 10; \
-        release=$(curl --silent https://api.github.com/repos/foosel/OctoPrint/releases/latest | jq -r .tag_name); \
-        i=$(expr $i + 1); \
       done; \
     fi; \
     git clone --branch "${release}" https://github.com/foosel/OctoPrint.git /opt/octoprint/OctoPrint && \
