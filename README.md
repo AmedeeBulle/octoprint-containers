@@ -20,7 +20,7 @@ OctoPrint containers  [![Build Status](https://travis-ci.org/AmedeeBulle/octopri
 
 <!-- TOC END -->
 # Introduction
-This is a Docker setup for [OctoPrint](https://octoprint.org/) on Raspberry Pi 3B/3B+.  
+This is a Docker setup for [OctoPrint](https://octoprint.org/) on Raspberry Pi.  
 It can be run with [resin.io](https://resin.io/) or as _Plain Docker_ on Raspbian.
 
 The setup is made of 3 containers:
@@ -30,8 +30,7 @@ The setup is made of 3 containers:
 
 The build will use by default the latest [OctoPrint](https://octoprint.org/) release, this can be overridden by changing the `release` argument in the `docker-compose.yml` file.
 
-Note that this setup only runs on Raspberry Pi 3B(+), as [resin.io](https://resin.io/) only supports multi-containers on these platforms.  
-The _Plain Docker_ setup on Raspbian might work on older models, but it has not been tested.
+This setup will run on any Raspberry Pi, however [OctoPrint](https://octoprint.org/) recommends a Raspberry Pi 3 or 3+.
 
 # Resin.io setup
 Although it may seem complex at first, [resin.io](https://resin.io/) allows you to install and configure [OctoPrint](https://octoprint.org/) on a Pi in a few clicks.  
@@ -124,12 +123,18 @@ This is the easiest and fastest way. The `pull` command will download the contai
 ```
 $ docker-compose pull
 ```
+__If you are not using a Raspberry Pi 3__: _multiarch_ build does not work properly on ARM variants (See https://github.com/moby/moby/issues/34875 ).  
+For older Raspberry Pi you need to amend the _docker-compose_ files to pull the correct images:
+```
+$ sed -e 's/\(image:.*\)/\1:arm32v6-latest/' -i.orig docker-compose.yml
+```
 
 ### Option 2: Re-Build the containers
 If for whatever reason you want to re-build the containers on your Pi, run:
 ```
 $ docker-compose build
 ```
+__If you are not using a Raspberry Pi 3__: copy the `.env-distr` to `.env` and select you Raspberry Pi version.
 
 ## Configure and run the OctoPrint server
 To customise your setup, create a file named `.env` with the environment variables described in the [resin.io](https://resin.io/) section. You can use the file `.env-distr` as template.
@@ -156,7 +161,7 @@ To update your setup with a newer version, get the latest code and containers an
 $ docker-compose down
 $ git pull origin master
 $ docker-compose pull # or build
-$ docker-compose up
+$ docker-compose up -d
 ```
 
 # First run
