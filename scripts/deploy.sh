@@ -12,7 +12,7 @@ then
   then
     # For the master branch we tag with the octoprint version
     IMAGE=$(docker-compose config | yq -r .services.octoprint.image)
-    TAG=$(docker run --rm "${IMAGE}" /opt/octoprint/OctoPrint/venv/bin/octoprint --version | awk '/Version:/ && NF==3 {print $NF}')
+    TAG=$(docker run --rm "${IMAGE}" /opt/octoprint/OctoPrint/venv/bin/octoprint --version | awk '/version/ && NF==3 {print $NF}')
   else
     # Otherwhise we just take the branch name
     TAG="${TRAVIS_BRANCH}"
