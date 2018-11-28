@@ -5,7 +5,8 @@ FROM resin/${OP_MACHINE_NAME:-%%RESIN_MACHINE_NAME%%}-debian:stretch
 
 RUN apt-get update && \
     apt-get install python-flask git build-essential subversion \
-	    libjpeg62-turbo-dev imagemagick ffmpeg libv4l-dev cmake && \
+	    libjpeg62-turbo-dev imagemagick ffmpeg libv4l-dev cmake \
+            libraspberrypi-dev && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
