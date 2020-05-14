@@ -16,18 +16,19 @@ WORKDIR /opt/octoprint/OctoPrint
 
 ARG release
 
-# Travis often fails in getting latest octoprint release, this is why we 
+# Travis often fails in getting latest octoprint release, this is why we
 # have this while/re-try loop...
 RUN if [ "${release}" = "latest" ]; then \
       i=0; \
       while true; do \
         i=$(expr $i + 1); \
-        release=$(curl --silent https://api.github.com/repos/foosel/OctoPrint/releases/latest | jq -r .tag_name); \
+        release=$(curl --silent --location https://api.github.com/repos/foosel/OctoPrint/releases/latest | jq -r .tag_name); \
         [ "${release}" = "null" -a $i -lt 10 ] || break;\
         echo "Cannot get release info -- retrying"; \
         sleep 10; \
       done; \
     fi; \
+    echo "Building Octoprint ${release}"; \
     git clone --branch "${release}" https://github.com/foosel/OctoPrint.git /opt/octoprint/OctoPrint && \
     virtualenv venv && \
       ./venv/bin/python setup.py install 
