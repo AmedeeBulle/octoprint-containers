@@ -10,7 +10,7 @@ SHELL ["/bin/bash", "-c"]
 RUN [[ -f /bin/sh.real ]] && rm /bin/sh && mv /bin/sh.real /bin/sh
 
 RUN apt-get update && \
-    apt-get install python-pip python-dev python-setuptools virtualenv \
+    apt-get install python-pip python-dev python-setuptools \
             python-virtualenv git libyaml-dev build-essential ffmpeg dbus \
             jq zlib1g-dev libjpeg62-turbo-dev && \
     apt-get clean && \
@@ -34,8 +34,8 @@ RUN if [ "${release}" = "latest" ]; then \
     fi; \
     echo "Building Octoprint ${release}"; \
     git clone --branch "${release}" https://github.com/foosel/OctoPrint.git /opt/octoprint/OctoPrint && \
-    virtualenv venv && \
-      ./venv/bin/python setup.py install 
+    python -m virtualenv venv && \
+      ./venv/bin/python setup.py install
 
 WORKDIR /opt/octoprint
 
