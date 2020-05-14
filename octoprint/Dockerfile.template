@@ -35,6 +35,7 @@ RUN if [ "${release}" = "latest" ]; then \
     echo "Building Octoprint ${release}"; \
     git clone --branch "${release}" https://github.com/foosel/OctoPrint.git /opt/octoprint/OctoPrint && \
     python -m virtualenv venv && \
+      ./venv/bin/pip install MarkupSafe && \
       ./venv/bin/python setup.py install
 
 WORKDIR /opt/octoprint
