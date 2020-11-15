@@ -4,7 +4,7 @@ ARG OP_MACHINE_NAME
 FROM balenalib/${OP_MACHINE_NAME:-%%RESIN_MACHINE_NAME%%}-debian:buster
 
 RUN apt-get update && \
-    apt-get install python-flask git build-essential subversion \
+    apt-get install python3 python3-flask git build-essential subversion \
 	    libjpeg62-turbo-dev imagemagick ffmpeg libv4l-dev cmake \
             libraspberrypi-dev && \
     apt-get clean && \

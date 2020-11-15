@@ -1,10 +1,11 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # Simple REST wrapper to start / stop streaming
 
 import os
-import sys
-from flask import Flask
 from subprocess import Popen
+import sys
+
+from flask import Flask
 
 base_dir = "/opt/webcam/mjpg-streamer/mjpg-streamer-experimental"
 mjpg_input = "input_raspicam.so -fps 5"
