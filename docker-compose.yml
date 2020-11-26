@@ -5,6 +5,7 @@ version: '2.1'
 
 volumes:
   octoprint_vol: {}
+  octoprint_2_vol: {}
 
 services:
   # Octoprint 1
