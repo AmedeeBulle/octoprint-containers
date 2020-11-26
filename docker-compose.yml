@@ -7,7 +7,7 @@ volumes:
   octoprint_vol: {}
 
 services:
-  # Octoprint itself
+  # Octoprint 1
   octoprint:
     build:
       context: octoprint
@@ -23,6 +23,22 @@ services:
       # - /run/dbus:/host/run/dbus
     labels:
       io.resin.features.dbus: '1'
+  # Octoprint 2
+  octoprint_2:
+    build:
+      context: octoprint_2
+      args:
+        OP_MACHINE_NAME:
+        release: latest
+    image: amedee/octoprint-octoprint
+    restart: always
+    privileged: true
+    volumes:
+      - octoprint_2_vol:/opt/octoprint/data
+      # Uncomment next line for "Plain Docker" setup
+      # - /run/dbus:/host/run/dbus
+    labels:
+      io.resin.features.dbus: '2'
   # Webcam stream
   webcam:
     build:
