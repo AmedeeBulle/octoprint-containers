@@ -5,7 +5,7 @@ FROM balenalib/${OP_MACHINE_NAME:-%%RESIN_MACHINE_NAME%%}-debian:buster
 
 RUN apt-get update && \
     apt-get install python3 python3-flask git build-essential subversion \
-	    libjpeg62-turbo-dev imagemagick ffmpeg libv4l-dev cmake \
+            libjpeg62-turbo-dev imagemagick ffmpeg libv4l-dev cmake \
             libraspberrypi-dev && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
@@ -13,8 +13,8 @@ RUN apt-get update && \
 WORKDIR /opt/webcam
 
 RUN git clone https://github.com/jacksonliam/mjpg-streamer.git /opt/webcam/mjpg-streamer && \
-	cd mjpg-streamer/mjpg-streamer-experimental && \
-	LD_LIBRARY_PATH=. make
+    cd mjpg-streamer/mjpg-streamer-experimental && \
+    LD_LIBRARY_PATH=. make
 
 COPY run.py run.py
 

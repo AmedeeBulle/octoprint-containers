@@ -17,6 +17,7 @@
   - [Updates](#updates)
 - [First run](#first-run)
 - [Note about persistence](#note-about-persistence)
+- [Multiple printers](#multiple-printers)
 
 <!-- TOC END -->
 # Introduction
@@ -234,3 +235,64 @@ docker-compose up -d
 ```
 
 By doing this, you will loose any change made to the code, in particular if you installed plugins you will have to re-install them (but their configuration will be preserved).
+
+# Multiple printers
+
+Although driving multiple printers from the same Raspberry Pi is possible, it might lead to performance issues. 
+This setup is nevertheless easy to achieve with the _plain Docker_ setup.  
+It is a good solution if:
+
+- You have a powerful Raspberry Pi
+- You have multiple printers but use only one at a time
+
+You can run any number of instances of this _container stack_ by using a different _project name_ and a different `.env` file.  
+The `docker-compose-multi.sh` convenience script is provided to simplify operations.
+
+Assuming you already have a running instance, to add a new one simply copy the `.env-extra-distr` sample file to `.env-<printer name>`,
+review the configuration parameters and start the instance with `./docker-compose-multi.sh <printer name> up -d`.
+
+Main points of attention:
+
+- Do not configure more than one Raspberry Pi camera!  
+  (There is no limitation on the number of USB cameras)
+- Ensure all instances have their own unique HTTP and HTTPS ports.
+
+Sample session:
+
+```shell
+# Start the main instance
+$ docker-compose up -d
+Creating network "octoprint_default" with the default driver
+Creating octoprint_octoprint_1 ... done
+Creating octoprint_webcam_1    ... done
+Creating octoprint_haproxy_1   ... done
+$ docker-compose ps
+        Name                       Command               State                    Ports
+---------------------------------------------------------------------------------------------------------
+octoprint_haproxy_1     /usr/bin/entry.sh /opt/hap ...   Up      0.0.0.0:443->443/tcp, 0.0.0.0:80->80/tcp
+octoprint_octoprint_1   /usr/bin/entry.sh /opt/oct ...   Up      5000/tcp
+octoprint_webcam_1      /usr/bin/entry.sh /opt/web ...   Up      5200/tcp, 8080/tcp
+
+# Start an additional instance for the "extra" printer:
+$ cp .env-extra-distr .env-extra
+$ vi .env-extra
+$ ./docker-compose-multi.sh extra up -d
+Creating network "extra_default" with the default driver
+Creating volume "extra_octoprint_vol" with default driver
+Creating extra_webcam_1    ... done
+Creating extra_octoprint_1 ... done
+Creating extra_haproxy_1   ... done
+$ ./docker-compose-multi.sh extra ps
+      Name                     Command               State                      Ports
+--------------------------------------------------------------------------------------------------------
+extra_haproxy_1     /usr/bin/entry.sh /opt/hap ...   Up      0.0.0.0:8443->443/tcp, 0.0.0.0:8080->80/tcp
+extra_octoprint_1   /usr/bin/entry.sh /opt/oct ...   Up      5000/tcp
+extra_webcam_1      /usr/bin/entry.sh /opt/web ...   Up      5200/tcp, 8080/tcp
+```
+
+Notes:
+
+- As you can see in the above output, instances use a different network namespace as well as a different volume for storing data,
+  so they are completely separated and independent.
+- Depending on when your printers / cameras are detected they might get different device names on your Raspberry Pi...
+  Always check that you are driving the right printer!
