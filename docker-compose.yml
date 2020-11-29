@@ -1,6 +1,6 @@
 # Docker-compose file for Octoprint Containers
 
-# Version 2.1 for resin compatibility
+# Version 2.1 for balena compatibility
 version: '2.1'
 
 volumes:

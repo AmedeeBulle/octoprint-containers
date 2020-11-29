@@ -52,7 +52,7 @@ def initialize():
     global mjpg_input
     print("*** Starting WebcamStream")
     sys.stdout.flush()
-    if os.getenv('RESIN'):
+    if os.getenv('BALENA'):
         # Expunge unexpanded variables from docker-compose
         for key, val in os.environ.items():
             if key.startswith('WEBCAM_') and val.startswith('${'):

@@ -1,7 +1,7 @@
 # Webcam streamer
 ARG OP_MACHINE_NAME
 
-FROM balenalib/${OP_MACHINE_NAME:-%%RESIN_MACHINE_NAME%%}-debian:buster
+FROM balenalib/${OP_MACHINE_NAME:-%%BALENA_MACHINE_NAME%%}-debian:buster
 
 RUN apt-get update && \
     apt-get install python3 python3-flask git build-essential subversion \
