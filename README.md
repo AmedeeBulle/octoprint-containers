@@ -1,4 +1,4 @@
-# OctoPrint containers  [![Build Status](https://travis-ci.org/AmedeeBulle/octoprint-containers.svg?branch=master)](https://travis-ci.org/AmedeeBulle/octoprint-containers)
+# OctoPrint containers  [![Build Status](https://travis-ci.com/AmedeeBulle/octoprint-containers.svg?branch=master)](https://travis-ci.com/AmedeeBulle/octoprint-containers)
 
 # Contents
 
