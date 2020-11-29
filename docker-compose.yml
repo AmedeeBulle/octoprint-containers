@@ -22,7 +22,7 @@ services:
       # Uncomment next line for "Plain Docker" setup
       # - /run/dbus:/host/run/dbus
     labels:
-      io.resin.features.dbus: '1'
+      io.balena.features.dbus: '1'
   # Webcam stream
   webcam:
     build:
